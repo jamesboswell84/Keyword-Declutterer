@@ -1,7 +1,11 @@
 import pandas as pd
-import os
 import re
-import streamlit as st
+
+### The following is used to store the dataframes between reruns
+if 'df' not in st.session_state:
+	st.session_state.df = None
+
+
 
 st.write("""
 # 🧹 Keyword Declutterer
@@ -11,7 +15,7 @@ Merge and declutter your competitor keyword lists, removing 99% of the brand, ir
 st.write("""
 Simple two-step setup:
 1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
-2. Go to SEMRush and download keyword lists for each of your chosen competitors (just into the Downloads folder is fine - you only need them temporarily. They must be exactly the same as you downloaded them from SEMRush (including filenames) - if not this will stop the tool from working)
+2. Go to SEMRush and download keyword lists for each of your chosen competitors (just download into any folder as you'll only need them temporarily. Additionally, they must be exactly the same format as you downloaded them from SEMRush (including filenames) - if not this will stop the tool from working)
 """)
 ### Upload your Excel files
 files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, type=['xlsx'])
@@ -22,20 +26,6 @@ for f in files_xlsx:
     df = df.append(data)
 st.write(df)
 
-### merge into single dataframe with a single top row and a new column for site name
-#path = r'C:\Users\44754\Documents\Python Scripts\Keywordle\banks keywords'
-#files = os.listdir(path)
-#files_xlsx = [f for f in files if '.xlsx' in f]
-#df = pd.DataFrame()
-#for f in files_xlsx:
-#    data = pd.read_excel(path+r"\\"+f, 'Sheet 1')
-#    sitename = re.findall(r"(.*)\-organic\.Positions",f)
-#    data["Site"] = sitename * len(data)
-#    df = df.append(data)
-
-
-
-#%%
 ### filter down keyword list - only keep keywords with >2 comp on Google page 1
 
 df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
