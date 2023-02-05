@@ -2,10 +2,16 @@ import pandas as pd
 import os
 import re
 
-# Simple two-step setup:
-# 1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
-# 2. Go to SEMRush and download keyword lists for each of your chosen competitors (just into the Downloads folder is fine - you only need them temporarily. They must be exactly the same as you downloaded them from SEMRush (including filenames) - if not this will stop the tool from working)
+st.write("""
+# 🧹 Keyword Declutterer
+Merge and declutter your competitor keyword lists, removing 99% of the brand, irrelevant and nonsense keywords.
+""")
 
+st.write("""
+Simple two-step setup:
+1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
+2. Go to SEMRush and download keyword lists for each of your chosen competitors (just into the Downloads folder is fine - you only need them temporarily. They must be exactly the same as you downloaded them from SEMRush (including filenames) - if not this will stop the tool from working)
+""")
 ### Upload your Excel files
 
 
