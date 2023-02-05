@@ -41,13 +41,13 @@ df4 = df2[df2["Keyword"].isin(df3.Keyword)]
 
 
 
-#%%
+
 ### pivot the data for a very quick SEMRush data look at estimated clicks by site
 
 df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
 df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
 
-#%%
+
 ### pivot the data for a very quick SEMRush data look at estimated clicks by sub-folder
 
 df7 = df4
