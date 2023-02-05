@@ -46,7 +46,7 @@ if files_xlsx is not None:
 			pass
 
 	### filter down keyword list - only keep keywords with >2 comp on Google page 1
-
+if st.button('Start decluttering'):
 	df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
 	df2 = df2[df2.Count < 2]
 	df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
