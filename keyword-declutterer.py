@@ -19,12 +19,14 @@ Simple two-step setup:
 """)
 ### Upload your Excel files
 files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, type=['xlsx'])
+df = pd.DataFrame()
 for f in files_xlsx:
     data = pd.read_excel(f, 'Sheet 1')
     sitename = re.findall(r"(.*)\-organic\.Positions",f)
     data["Site"] = sitename * len(data)
     df = df.append(data)
 st.write(df)
+st.session_state.df = df
 
 ### filter down keyword list - only keep keywords with >2 comp on Google page 1
 
