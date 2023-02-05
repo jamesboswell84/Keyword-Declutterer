@@ -20,7 +20,7 @@ Simple two-step setup:
 ### Upload your Excel files
 files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, type=['xlsx'])
 
-if uploaded_file is not None:
+if files_xlsx is not None:
 	df = pd.DataFrame()
 	for f in files_xlsx:
 		data = pd.read_excel(f, 'Sheet 1')
