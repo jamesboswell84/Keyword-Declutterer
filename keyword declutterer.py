@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import re
+import streamlit as st
 
 st.write("""
 # 🧹 Keyword Declutterer
@@ -13,19 +14,24 @@ Simple two-step setup:
 2. Go to SEMRush and download keyword lists for each of your chosen competitors (just into the Downloads folder is fine - you only need them temporarily. They must be exactly the same as you downloaded them from SEMRush (including filenames) - if not this will stop the tool from working)
 """)
 ### Upload your Excel files
-
-
-
-### merge into single dataframe with a single top row and a new column for site name
-path = r'C:\Users\44754\Documents\Python Scripts\Keywordle\banks keywords'
-files = os.listdir(path)
-files_xlsx = [f for f in files if '.xlsx' in f]
-df = pd.DataFrame()
+files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, type=['xlsx'])
 for f in files_xlsx:
-    data = pd.read_excel(path+r"\\"+f, 'Sheet 1')
+    data = pd.read_excel(f, 'Sheet 1')
     sitename = re.findall(r"(.*)\-organic\.Positions",f)
     data["Site"] = sitename * len(data)
     df = df.append(data)
+st.write(df)
+
+### merge into single dataframe with a single top row and a new column for site name
+#path = r'C:\Users\44754\Documents\Python Scripts\Keywordle\banks keywords'
+#files = os.listdir(path)
+#files_xlsx = [f for f in files if '.xlsx' in f]
+#df = pd.DataFrame()
+#for f in files_xlsx:
+#    data = pd.read_excel(path+r"\\"+f, 'Sheet 1')
+#    sitename = re.findall(r"(.*)\-organic\.Positions",f)
+#    data["Site"] = sitename * len(data)
+#    df = df.append(data)
 
 
 
