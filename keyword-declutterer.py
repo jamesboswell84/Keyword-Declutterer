@@ -6,21 +6,20 @@ import streamlit as st
 if 'df' not in st.session_state:
 	st.session_state.df = None
 
-
-
 st.write("""
 # 🧹 Keyword Declutterer
-Merge and declutter your competitor keyword lists, removing 99% of the brand, irrelevant and nonsense keywords.
+### Merge and declutter your competitor keyword lists, removing 99% of the brand, irrelevant and nonsense keywords.
+""")
+st.write("""
+##Simple two-step setup:
+###1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
+###2. Go to SEMRush and download keyword lists for each of your chosen competitors (just download into any folder as you'll only need them temporarily. Additionally, they must be exactly the same format as you downloaded them from SEMRush (including filenames) - if not this will stop the tool from working)
 """)
 
-st.write("""
-Simple two-step setup:
-1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
-2. Go to SEMRush and download keyword lists for each of your chosen competitors (just download into any folder as you'll only need them temporarily. Additionally, they must be exactly the same format as you downloaded them from SEMRush (including filenames) - if not this will stop the tool from working)
-""")
 ### Upload your Excel files
 files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, type=['xlsx'])
 
+    ### Read files and create single dataframe
 	if st.button('Start decluttering'):
 		df = pd.DataFrame()
 		for f in files_xlsx:
@@ -43,9 +42,9 @@ files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, 
 		except TypeError:
 			pass
 		except AttributeError:
-				pass
+			pass
 
-		### filter down keyword list - only keep keywords with >2 comp on Google page 1
+		### filter down keyword list 
 		df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
 		df2 = df2[df2.Count < 2]
 		df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
@@ -55,19 +54,11 @@ files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, 
 		df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
 		df4 = df2[df2["Keyword"].isin(df3.Keyword)]
 
-		### allow the data to be downloaded - for categorising and uploading to STAT
-
-
-
-
 		### pivot the data for a very quick SEMRush data look at estimated clicks by site
-
 		df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
 		df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
 
-
 		### pivot the data for a very quick SEMRush data look at estimated clicks by sub-folder
-
 		df7 = df4
 		df7 = df7["URL"].str.split('/', expand=True)
 		df7 = df7.iloc[: , 3:].reset_index()
