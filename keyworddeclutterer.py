@@ -62,7 +62,7 @@ if len(files_xlsx) > 2:
 		df3 = df3[df3.Site > 3].reset_index()
 		df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
 		df4 = df2[df2["Keyword"].isin(df3.Keyword)]
-		df4.drop(['Count'], axis=1)
+		df4 = df4.drop(['Count'], axis=1)
 		st.session_state.df4 = df4
 
 		try:
