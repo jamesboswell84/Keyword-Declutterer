@@ -46,7 +46,7 @@ if len(files_xlsx) > 2:
 			st.write("""
 	## Merged keyword list (cluttered):
 	""")
-			st.dataframe(df) 
+			st.dataframe(df[:100]) 
 			### The following prints the output and saves it to csv file
 			def convert_df(df):
 			# IMPORTANT: Cache the conversion to prevent computation on every rerun
@@ -74,7 +74,7 @@ if len(files_xlsx) > 2:
 			st.write("""
 	## Decluttered keyword list:
 	""")
-			st.dataframe(df4) 
+			st.dataframe(df4[:100]) 
 			### The following prints the output and saves it to csv file
 			def convert_df(df4):
 			# IMPORTANT: Cache the conversion to prevent computation on every rerun
@@ -111,19 +111,19 @@ if len(files_xlsx) > 2:
 			st.write("""
 	## Sites by traffic:
 	""")
-			st.dataframe(df5)
+			st.dataframe(df5[:100])
 			st.write("""
 	## Sites by traffic value ($CPC * traffic):
 	""")
-			st.dataframe(df6)
+			st.dataframe(df6[:100])
 			st.write("""
 	## Subfolder/page by traffic:
 	""")
-			st.dataframe(df9)
+			st.dataframe(df9[:100])
 			st.write("""
 	## Subfolder/page by traffic value ($CPC * traffic):
 	""")
-			st.dataframe(df10)
+			st.dataframe(df10[:100])
 		except TypeError:
 			pass
 		except AttributeError:
