@@ -99,8 +99,25 @@ if st.button('Start merge & declutter'):
 	st.session_state.df9 = df9
 	df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
 	st.session_state.df10 = df10
-
-	st.dataframe(df5)
-	st.dataframe(df6)
-	st.dataframe(df9)
-	st.dataframe(df10)
+	
+	try:
+		st.write("""
+## Sites by traffic:
+""")
+		st.dataframe(df5)
+		st.write("""
+## Sites by traffic value ($CPC * traffic):
+""")
+		st.dataframe(df6)
+		st.write("""
+## Subfolder/page by traffic:
+""")
+		st.dataframe(df9)
+		st.write("""
+## Subfolder/page by traffic value ($CPC * traffic):
+""")
+		st.dataframe(df10)
+	except TypeError:
+		pass
+	except AttributeError:
+		pass
