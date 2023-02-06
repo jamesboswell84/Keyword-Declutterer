@@ -91,6 +91,10 @@ if st.button('Start decluttering'):
 	df7 = df7.set_index("index").stack().reset_index(level=1, drop=True).to_frame("Sub").reset_index()
 	df8 = df4.reset_index()
 	df7 = df7.merge(df8,how="inner",on=["index"])
+	try:
+		st.write[df7]
+	except:
+		pass
 	df7["Sub_x"] = df7["Sub_x"].replace(r'^s*$', float('NaN'), regex = True)
 	df7.dropna(inplace = True)
 	df7["Subfolder/Page"] = df7["Sub_x"]
@@ -98,3 +102,4 @@ if st.button('Start decluttering'):
 	st.session_state.df9 = df9
 	df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
 	st.session_state.df10 = df10
+	
