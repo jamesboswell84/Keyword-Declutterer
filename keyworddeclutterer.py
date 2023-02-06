@@ -26,7 +26,7 @@ st.write("""
 files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, type=['xlsx'])
 
 ### Read files and create single dataframe
-if files_xlsx is not None:	
+if files_xlsx is not []:	
 	if st.button('Start merge & declutter'):
 		df = pd.DataFrame()
 		for f in range(len(files_xlsx)):
