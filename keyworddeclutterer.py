@@ -92,11 +92,6 @@ if st.button('Start merge & declutter'):
 	df7 = df7.set_index("index").stack().reset_index(level=1, drop=True).to_frame("Sub").reset_index()
 	df8 = df4.reset_index()
 	df7 = df7.merge(df8,how="inner",on=["index"])
-	df11 = df7
-	try:
-		st.dataframe[df11]
-	except:
-		pass
 	df7["Sub"] = df7["Sub"].replace(r'^s*$', float('NaN'), regex = True)
 	df7.dropna(inplace = True)
 	df7["Subfolder/Page"] = df7["Sub"]
@@ -105,3 +100,7 @@ if st.button('Start merge & declutter'):
 	df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
 	st.session_state.df10 = df10
 
+	st.dataframe(df5)
+	st.dataframe(df6)
+	st.dataframe(df9)
+	st.dataframe(df10)
