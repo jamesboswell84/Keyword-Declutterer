@@ -30,12 +30,17 @@ files_xlsx = st.file_uploader("", accept_multiple_files=True, type=['xlsx'])
 if len(files_xlsx) > 2:	
 	if st.button('Start merge & declutter'):
 		df = pd.DataFrame()
-		for f in range(len(files_xlsx)):
-			data = pd.read_excel(files_xlsx[f], 'Sheet 1')
-			sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
-			data["Site"] = sitename * len(data)
-			df = df.append(data)
-		st.session_state.df = df
+		with st.spinner("Merging files..."):
+			progbar = st.progress(0)
+			counter = 0
+			for f in range(len(files_xlsx)):
+				progbar.progress(counter/len(files_xlsx))
+				counter = counter + 1
+				data = pd.read_excel(files_xlsx[f], 'Sheet 1')
+				sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
+				data["Site"] = sitename * len(data)
+				df = df.append(data)
+			st.session_state.df = df
 
 		try:
 			st.write("""
