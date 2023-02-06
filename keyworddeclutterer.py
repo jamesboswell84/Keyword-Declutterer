@@ -5,7 +5,13 @@ import streamlit as st
 ### The following is used to store the dataframes between reruns
 if 'df' not in st.session_state:
 	st.session_state.df = None
-
+if 'df4' not in st.session_state:
+	st.session_state.df4 = None
+if 'df9' not in st.session_state:
+	st.session_state.df9 = None
+if 'df10' not in st.session_state:
+	st.session_state.df10 = None
+	
 st.write("""
 # 🧹 Keyword Declutterer
 ### Merge and declutter your competitor keyword lists, removing 99% of the brand, irrelevant and nonsense keywords.
@@ -27,18 +33,17 @@ if st.button('Start decluttering'):
 		sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
 		data["Site"] = sitename * len(data)
 		df = df.append(data)
-	st.write(df)
 	st.session_state.df = df
 
 	try:
-		st.dataframe(df[:20]) 
+		st.dataframe(df) 
 
 		### The following prints the output and saves it to csv file
 		def convert_df(df):
 		# IMPORTANT: Cache the conversion to prevent computation on every rerun
 			return df.to_csv().encode('utf-8')
 		csv = convert_df(df)
-		st.download_button('Download file', csv, file_name="merged_file.csv",mime='text/csv')
+		st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
 	except TypeError:
 		pass
 	except AttributeError:
@@ -53,11 +58,28 @@ if st.button('Start decluttering'):
 	df3 = df3[df3.Site > 3].reset_index()
 	df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
 	df4 = df2[df2["Keyword"].isin(df3.Keyword)]
+	st.session_state.df4 = df4
+	
+	try:
+		st.dataframe(df4) 
 
+		### The following prints the output and saves it to csv file
+		def convert_df(df4):
+		# IMPORTANT: Cache the conversion to prevent computation on every rerun
+			return df4.to_csv().encode('utf-8')
+		csv = convert_df(df4)
+		st.download_button('Download decluttered file (edited)', csv, file_name="decluttered_file.csv",mime='text/csv')
+	except TypeError:
+		pass
+	except AttributeError:
+		pass	
+	
 	### pivot the data for a very quick SEMRush data look at estimated clicks by site
 	df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
+	st.session_state.df5 = df5
 	df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
-
+	st.session_state.df6 = df6
+	
 	### pivot the data for a very quick SEMRush data look at estimated clicks by sub-folder
 	df7 = df4
 	df7 = df7["URL"].str.split('/', expand=True)
@@ -69,4 +91,6 @@ if st.button('Start decluttering'):
 	df7.dropna(inplace = True)
 	df7["Subfolder/Page"] = df7["Sub_x"]
 	df9 = pd.pivot_table(df7, values="Traffic", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
+	st.session_state.df9 = df9
 	df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
+	st.session_state.df10 = df10
