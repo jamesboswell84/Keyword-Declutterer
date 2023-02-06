@@ -22,9 +22,9 @@ files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, 
 ### Read files and create single dataframe
 if st.button('Start decluttering'):
 	df = pd.DataFrame()
-	for f in files_xlsx:
-		data = pd.read_excel(f, 'Sheet 1')
-		sitename = re.findall(r"(.*)\-organic\.Positions",f)
+	for f in range(len(files_xlsx)):
+		data = pd.read_excel(files_xlsx[f], 'Sheet 1')
+		sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
 		data["Site"] = sitename * len(data)
 		df = df.append(data)
 	st.write(df)
