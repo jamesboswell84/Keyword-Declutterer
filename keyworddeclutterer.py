@@ -36,8 +36,10 @@ if st.button('Start decluttering'):
 	st.session_state.df = df
 
 	try:
+		st.write("""
+## Merged keyword list (cluttered):
+""")
 		st.dataframe(df) 
-
 		### The following prints the output and saves it to csv file
 		def convert_df(df):
 		# IMPORTANT: Cache the conversion to prevent computation on every rerun
@@ -61,8 +63,10 @@ if st.button('Start decluttering'):
 	st.session_state.df4 = df4
 	
 	try:
+		st.write("""
+## Decluttered keyword list:
+""")
 		st.dataframe(df4) 
-
 		### The following prints the output and saves it to csv file
 		def convert_df(df4):
 		# IMPORTANT: Cache the conversion to prevent computation on every rerun
