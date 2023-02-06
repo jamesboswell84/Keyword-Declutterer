@@ -26,7 +26,7 @@ st.write("""
 files_xlsx = st.file_uploader("Choose Excel files", accept_multiple_files=True, type=['xlsx'])
 
 ### Read files and create single dataframe
-if st.button('Start decluttering'):
+if st.button('Start merge & declutter'):
 	df = pd.DataFrame()
 	for f in range(len(files_xlsx)):
 		data = pd.read_excel(files_xlsx[f], 'Sheet 1')
@@ -60,6 +60,7 @@ if st.button('Start decluttering'):
 	df3 = df3[df3.Site > 3].reset_index()
 	df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
 	df4 = df2[df2["Keyword"].isin(df3.Keyword)]
+	df4.drop(['Count'], axis=1)
 	st.session_state.df4 = df4
 	
 	try:
@@ -91,8 +92,9 @@ if st.button('Start decluttering'):
 	df7 = df7.set_index("index").stack().reset_index(level=1, drop=True).to_frame("Sub").reset_index()
 	df8 = df4.reset_index()
 	df7 = df7.merge(df8,how="inner",on=["index"])
+	df11 = df7
 	try:
-		st.write[df7]
+		st.dataframe[df11]
 	except:
 		pass
 	df7["Sub_x"] = df7["Sub_x"].replace(r'^s*$', float('NaN'), regex = True)
