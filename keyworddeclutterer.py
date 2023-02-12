@@ -17,8 +17,8 @@ if 'df10' not in st.session_state:
 	st.session_state.df10 = None
 if "alwaysshow" not in st.session_state:
         st.session_state.alwaysshow = False	
-if 'files_xlsx' not in st.session_state:
-	st.session_state.files_xlsx = None
+if "files_xlsx" not in st.session_state:
+	files_xlsx = 3
 	
 st.write("""
 	# 🧹 Keyword Declutterer
@@ -37,11 +37,11 @@ st.session_state.files_xlsx = files_xlsx
 
 ### Read files and create single dataframe
 		
-if st.button('Start merge & declutter'):
-	st.session_state.alwaysshow = True
-	if len(files_xlsx) > 2:
+if len(files_xlsx) > 2:
+	if st.button('Start merge & declutter'):
+		st.session_state.alwaysshow = True
 		df = pd.DataFrame()
-		with st.spinner("Merging files & decluttering..."):
+		with st.spinner("Merging files..."):
 			progbar = st.progress(0)
 			counter = 0
 			for f in range(len(files_xlsx)):
@@ -52,7 +52,8 @@ if st.button('Start merge & declutter'):
 				data["Site"] = sitename * len(data)
 				df = df.append(data)
 
-			### filter down keyword list 
+		### filter down keyword list 
+		with st.spinner("Decluttering files..."):
 			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
 			df2 = df2[df2.Count < 2]
 			df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
@@ -79,16 +80,13 @@ if st.button('Start merge & declutter'):
 			df7["Subfolder/Page"] = df7["Sub"]
 			df9 = pd.pivot_table(df7, values="Traffic", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
 			df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
-		st.session_state.df = df
-		st.session_state.df4 = df4
-		st.session_state.df5 = df5			
-		st.session_state.df6 = df6			
-		st.session_state.df9 = df9
-		st.session_state.df10 = df10		
-	else:
-		st.write("""
-				Not enough files.
-		""")
+			st.session_state.df = df
+			st.session_state.df4 = df4
+			st.session_state.df5 = df5			
+			st.session_state.df6 = df6			
+			st.session_state.df9 = df9
+			st.session_state.df10 = df10		
+
 ### if button has been pushed to session state do the following
 if "alwaysshow" in st.session_state:
 	### show and allow download of cluttered unedited file
