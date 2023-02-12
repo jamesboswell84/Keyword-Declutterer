@@ -78,12 +78,12 @@ if len(files_xlsx) > 2:
 			df7["Subfolder/Page"] = df7["Sub"]
 			df9 = pd.pivot_table(df7, values="Traffic", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
 			df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
-st.session_state.df = df
-st.session_state.df4 = df4
-st.session_state.df5 = df5			
-st.session_state.df6 = df6			
-st.session_state.df9 = df9
-st.session_state.df10 = df10		
+		st.session_state.df = df
+		st.session_state.df4 = df4
+		st.session_state.df5 = df5			
+		st.session_state.df6 = df6			
+		st.session_state.df9 = df9
+		st.session_state.df10 = df10		
 	
 ### if button has been pushed to session state do the following
 if st.session_state.alwaysshow:
