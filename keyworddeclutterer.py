@@ -43,7 +43,7 @@ if len(files_xlsx) > 2:
 			st.session_state.df = df
 try:
 	### show and allow download of cluttered unedited file
-	if "df" in st.session_state:
+	if "df" is not None:
 		try:
 			st.write("""
 				#### Merged keyword list (cluttered):
