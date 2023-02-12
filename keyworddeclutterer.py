@@ -55,9 +55,9 @@ if len(files_xlsx) > 2:
 			csv = convert_df(df)
 			st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
 		except TypeError:
-			#pass
+			pass
 		except AttributeError:
-			#pass
+			pass
 
 		### filter down keyword list 
 		df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
