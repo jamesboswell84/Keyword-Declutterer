@@ -50,7 +50,6 @@ if len(files_xlsx) > 2:
 				sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
 				data["Site"] = sitename * len(data)
 				df = df.append(data)
-			st.session_state.df = df
 		
 			### filter down keyword list 
 			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
@@ -61,14 +60,11 @@ if len(files_xlsx) > 2:
 			df3 = df3[df3.Site > 3].reset_index()
 			df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
 			df4 = df2[df2["Keyword"].isin(df3.Keyword)]
-			df4 = df4.drop(['Count'], axis=1)
-			st.session_state.df4 = df4
+			df4 = df4.drop(['Count'], axis=1)	
 
 			### pivot the data for a very quick SEMRush data look at estimated clicks by site
-			df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
-			st.session_state.df5 = df5
-			df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
-			st.session_state.df6 = df6
+			df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)		
+			df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)		
 
 			### pivot the data for a very quick SEMRush data look at estimated clicks by sub-folder
 			df7 = df4
@@ -81,9 +77,13 @@ if len(files_xlsx) > 2:
 			df7.dropna(inplace = True)
 			df7["Subfolder/Page"] = df7["Sub"]
 			df9 = pd.pivot_table(df7, values="Traffic", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
-			st.session_state.df9 = df9
 			df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
-			st.session_state.df10 = df10		
+st.session_state.df = df
+st.session_state.df4 = df4
+st.session_state.df5 = df5			
+st.session_state.df6 = df6			
+st.session_state.df9 = df9
+st.session_state.df10 = df10		
 	
 ### if button has been pushed to session state do the following
 if st.session_state.alwaysshow:
