@@ -143,15 +143,18 @@ if len(files_xlsx) > 2:
 		tab1, tab2, tab3, tab4, tab5 = st.tabs([nametab1, nametab2, nametab3, nametab4,nametab5])
 
 		with tab1:
-			try:
-				st.write("""
-					#### Sites by traffic:
-				""")
-				st.dataframe(df5[:100])		
-			except TypeError:
-				pass
-			except AttributeError:
-				pass	
+			tabdata, tabchart = st.tabs(["Data","Chart"])
+			with tabdata:
+				try:
+					st.write("""
+						#### Sites by traffic:
+					""")
+					st.dataframe(df5[:100])		
+				except TypeError:
+					pass
+				except AttributeError:
+					pass
+			with tabchart:
 		with tab2:
 			try:
 				st.write("""
