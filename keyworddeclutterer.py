@@ -36,9 +36,10 @@ files_xlsx = st.file_uploader("", accept_multiple_files=True, type=['xlsx'])
 st.session_state.files_xlsx = files_xlsx
 
 ### Read files and create single dataframe
-if len(files_xlsx) > 2:		
-	if st.button('Start merge & declutter'):
-		st.session_state.alwaysshow = True
+		
+if st.button('Start merge & declutter'):
+	st.session_state.alwaysshow = True
+	if len(files_xlsx) > 2:
 		df = pd.DataFrame()
 		with st.spinner("Merging files & decluttering..."):
 			progbar = st.progress(0)
@@ -50,7 +51,7 @@ if len(files_xlsx) > 2:
 				sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
 				data["Site"] = sitename * len(data)
 				df = df.append(data)
-		
+
 			### filter down keyword list 
 			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
 			df2 = df2[df2.Count < 2]
@@ -84,7 +85,10 @@ if len(files_xlsx) > 2:
 		st.session_state.df6 = df6			
 		st.session_state.df9 = df9
 		st.session_state.df10 = df10		
-	
+	else:
+		st.write("""
+				Not enough files.
+		""")
 	### if button has been pushed to session state do the following
 	if st.session_state.alwaysshow:
 		### show and allow download of cluttered unedited file
