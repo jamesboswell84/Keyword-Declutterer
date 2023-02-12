@@ -197,7 +197,7 @@ if len(files_xlsx) > 2:
 					st.write("""
 						#### Subfolder/page by traffic:
 					""")
-					st.bar_chart(df9[:100])
+					st.bar_chart(df9[:30])
 				except TypeError:
 					pass
 				except AttributeError:
@@ -219,7 +219,7 @@ if len(files_xlsx) > 2:
 					st.write("""
 						#### Subfolder/page by traffic value ($CPC * traffic):
 					""")
-					st.bar_chart(df10[:100])
+					st.bar_chart(df10[:30])
 				except TypeError:
 					pass
 				except AttributeError:
