@@ -89,102 +89,102 @@ if st.button('Start merge & declutter'):
 		st.write("""
 				Not enough files.
 		""")
-	### if button has been pushed to session state do the following
-	if st.session_state.alwaysshow:
-		### show and allow download of cluttered unedited file
-		try:
-			st.write("""
-				#### Merged keyword list (cluttered):
-			""")
-			st.dataframe(df[:100]) 
+### if button has been pushed to session state do the following
+if st.session_state.alwaysshow:
+	### show and allow download of cluttered unedited file
+	try:
+		st.write("""
+			#### Merged keyword list (cluttered):
+		""")
+		st.dataframe(df[:100]) 
+		### The following allows downloading to csv file
+
+		def convert_df(df):
+		# IMPORTANT: Cache the conversion to prevent computation on every rerun
+			return df.to_csv().encode('utf-8')
+		csv = convert_df(df)
+		st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
+	except TypeError:
+		pass
+	except AttributeError:
+		pass
+	except NameError:
+		pass
+
+	### show and allow download of decluttered edited file
+	try:
+		st.write("""
+			#### Decluttered keyword list:
+		""")
+		st.dataframe(df4[:100]) 
 			### The following allows downloading to csv file
+		def convert_df(df4):
+		# IMPORTANT: Cache the conversion to prevent computation on every rerun
+			return df4.to_csv().encode('utf-8')
+		csv = convert_df(df4)
+		st.download_button('Download decluttered file (edited)', csv, file_name="decluttered_file.csv",mime='text/csv')
+	except TypeError:
+		pass
+	except AttributeError:
+		pass	
+	except NameError:
+		pass
 
-			def convert_df(df):
-			# IMPORTANT: Cache the conversion to prevent computation on every rerun
-				return df.to_csv().encode('utf-8')
-			csv = convert_df(df)
-			st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
-		except TypeError:
-			pass
-		except AttributeError:
-			pass
-		except NameError:
-			pass
+	### show data tables and visualisations
+	nametab1 = "Sites by traffic"
+	nametab2 = "Sites by traffic value ($CPC * traffic)"
+	nametab3 = "Subfolder/page by traffic"
+	nametab4 = "Subfolder/page by traffic value ($CPC * traffic)"
+	nametab5 = "$CPC versus difficulty"
+	tab1, tab2, tab3, tab4, tab5 = st.tabs([nametab1, nametab2, nametab3, nametab4,nametab5])
 
-		### show and allow download of decluttered edited file
+	with tab1:
 		try:
 			st.write("""
-				#### Decluttered keyword list:
+				#### Sites by traffic:
 			""")
-			st.dataframe(df4[:100]) 
-				### The following allows downloading to csv file
-			def convert_df(df4):
-			# IMPORTANT: Cache the conversion to prevent computation on every rerun
-				return df4.to_csv().encode('utf-8')
-			csv = convert_df(df4)
-			st.download_button('Download decluttered file (edited)', csv, file_name="decluttered_file.csv",mime='text/csv')
+			st.dataframe(df5[:100])		
 		except TypeError:
 			pass
 		except AttributeError:
 			pass	
-		except NameError:
+	with tab2:
+		try:
+			st.write("""
+				#### Sites by traffic value ($CPC * traffic):
+			""")
+			st.dataframe(df6[:100])
+		except TypeError:
 			pass
-
-		### show data tables and visualisations
-		nametab1 = "Sites by traffic"
-		nametab2 = "Sites by traffic value ($CPC * traffic)"
-		nametab3 = "Subfolder/page by traffic"
-		nametab4 = "Subfolder/page by traffic value ($CPC * traffic)"
-		nametab5 = "$CPC versus difficulty"
-		tab1, tab2, tab3, tab4, tab5 = st.tabs([nametab1, nametab2, nametab3, nametab4,nametab5])
-
-		with tab1:
-			try:
-				st.write("""
-					#### Sites by traffic:
-				""")
-				st.dataframe(df5[:100])		
-			except TypeError:
-				pass
-			except AttributeError:
-				pass	
-		with tab2:
-			try:
-				st.write("""
-					#### Sites by traffic value ($CPC * traffic):
-				""")
-				st.dataframe(df6[:100])
-			except TypeError:
-				pass
-			except AttributeError:
-				pass	
-		with tab3:
-			try:
-				st.write("""
-					#### Subfolder/page by traffic:
-				""")
-				st.dataframe(df9[:100])
-			except TypeError:
-				pass
-			except AttributeError:
-				pass	
-		with tab4:
-			try:
-				st.write("""
-					#### Subfolder/page by traffic value ($CPC * traffic):
-				""")
-				st.dataframe(df10[:100])
-			except TypeError:
-				pass
-			except AttributeError:
-				pass
-		with tab5:
-			try:
-				st.write("""
-					#### Subfolder/page by traffic value ($CPC * traffic):
-				""")				
-			except TypeError:
-				pass
-			except AttributeError:
-				pass
+		except AttributeError:
+			pass	
+	with tab3:
+		try:
+			st.write("""
+				#### Subfolder/page by traffic:
+			""")
+			st.dataframe(df9[:100])
+		except TypeError:
+			pass
+		except AttributeError:
+			pass	
+	with tab4:
+		try:
+			st.write("""
+				#### Subfolder/page by traffic value ($CPC * traffic):
+			""")
+			st.dataframe(df10[:100])
+		except TypeError:
+			pass
+		except AttributeError:
+			pass
+	with tab5:
+		try:
+			st.write("""
+				#### Subfolder/page by traffic value ($CPC * traffic):
+			""")				
+		except TypeError:
+			pass
+		except AttributeError:
+			pass
 
