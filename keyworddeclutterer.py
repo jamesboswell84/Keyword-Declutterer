@@ -159,48 +159,75 @@ if len(files_xlsx) > 2:
 					st.write("""
 						#### Sites by traffic:
 					""")
-					st.dataframe(df5[:100])		
+					st.bar_chart(df5[:20])
 				except TypeError:
 					pass
 				except AttributeError:
 					pass				
 		with tab2:
-			try:
-				st.write("""
-					#### Sites by traffic value ($CPC * traffic):
-				""")
-				st.dataframe(df6[:100])
-			except TypeError:
-				pass
-			except AttributeError:
-				pass	
+			tabdata, tabchart = st.tabs(["Data","Chart"])
+			with tabdata:
+				try:
+					st.write("""
+						#### Sites by traffic value ($CPC * traffic):
+					""")
+					st.dataframe(df6[:100])
+				except TypeError:
+					pass
+				except AttributeError:
+					pass	
+			with tabchart:
+				try:
+					st.write("""
+						#### Sites by traffic value ($CPC * traffic):
+					""")
+					st.bar_chart(df6[:20])
+				except TypeError:
+					pass
+				except AttributeError:
+					pass		
 		with tab3:
-			try:
-				st.write("""
-					#### Subfolder/page by traffic:
-				""")
-				st.dataframe(df9[:100])
-			except TypeError:
-				pass
-			except AttributeError:
-				pass	
+			tabdata, tabchart = st.tabs(["Data","Chart"])
+			with tabdata:				
+				try:
+					st.write("""
+						#### Subfolder/page by traffic:
+					""")
+					st.dataframe(df9[:100])
+				except TypeError:
+					pass
+				except AttributeError:
+					pass
+			with tabchart:				
+				try:
+					st.write("""
+						#### Subfolder/page by traffic:
+					""")
+					st.bar_chart(df9[:20])
+				except TypeError:
+					pass
+				except AttributeError:
+					pass
 		with tab4:
-			try:
-				st.write("""
-					#### Subfolder/page by traffic value ($CPC * traffic):
-				""")
-				st.dataframe(df10[:100])
-			except TypeError:
-				pass
-			except AttributeError:
-				pass
-		with tab5:
-			try:
-				st.write("""
-					#### Subfolder/page by traffic value ($CPC * traffic):
-				""")				
-			except TypeError:
-				pass
-			except AttributeError:
-				pass
+			tabdata, tabchart = st.tabs(["Data","Chart"])
+			with tabdata:				
+				try:
+					st.write("""
+						#### Subfolder/page by traffic value ($CPC * traffic):
+					""")
+					st.dataframe(df10[:100])
+				except TypeError:
+					pass
+				except AttributeError:
+					pass
+			with tabchart:				
+				try:
+					st.write("""
+						#### Subfolder/page by traffic value ($CPC * traffic):
+					""")
+					st.bar_chart(df10[:20])
+				except TypeError:
+					pass
+				except AttributeError:
+					pass
 
