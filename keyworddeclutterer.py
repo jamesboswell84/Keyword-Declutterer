@@ -88,7 +88,13 @@ if len(files_xlsx) > 2:
 			st.session_state.df10 = df10		
 
 	### if button has been pushed to session state do the following
-	if "alwaysshow" in st.session_state:
+	if st.session_state.alwaysshow:
+		df = st.session_state.df
+		df4 = st.session_state.df4
+		df5 = st.session_state.df5	
+		df6 = st.session_state.df6			
+		df9 = st.session_state.df9
+		df10 = st.session_state.df10
 		### show and allow download of cluttered unedited file
 		try:
 			st.write("""
