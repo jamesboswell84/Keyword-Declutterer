@@ -73,8 +73,8 @@ if len(files_xlsx) > 2:
 
 		try:
 			st.write("""
-	## Decluttered keyword list:
-	""")
+				## Decluttered keyword list:
+			""")
 			st.dataframe(df4[:100]) 
 			### The following prints the output and saves it to csv file
 			def convert_df(df4):
@@ -129,9 +129,9 @@ if len(files_xlsx) > 2:
 			st.dataframe(df6[:100])
 		with tab3:
 			if 'df9' in st.session_state:
-			st.write("""
-				## Subfolder/page by traffic:
-			""")
+				st.write("""
+					## Subfolder/page by traffic:
+				""")
 			st.dataframe(df9[:100])
 		with tab4:
 			if 'df10' in st.session_state:
