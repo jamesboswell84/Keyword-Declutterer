@@ -155,6 +155,15 @@ if len(files_xlsx) > 2:
 				except AttributeError:
 					pass
 			with tabchart:
+				try:
+					st.write("""
+						#### Sites by traffic:
+					""")
+					st.dataframe(df5[:100])		
+				except TypeError:
+					pass
+				except AttributeError:
+					pass				
 		with tab2:
 			try:
 				st.write("""
