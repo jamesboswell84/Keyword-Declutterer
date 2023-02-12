@@ -95,25 +95,28 @@ if len(files_xlsx) > 2:
 		df6 = st.session_state.df6			
 		df9 = st.session_state.df9
 		df10 = st.session_state.df10
+		
 		### show and allow download of cluttered unedited file
-		try:
-			st.write("""
-				#### Merged keyword list (cluttered):
-			""")
-			st.dataframe(df[:100]) 
-			### The following allows downloading to csv file
+		cluttered = st.checkbox('Preview merged file pre-decluttering')
+		if cluttered:
+			try:
+				st.write("""
+					#### Merged keyword list (cluttered):
+				""")
+				st.dataframe(df[:100]) 
+				### The following allows downloading to csv file
 
-			def convert_df(df):
-			# IMPORTANT: Cache the conversion to prevent computation on every rerun
-				return df.to_csv().encode('utf-8')
-			csv = convert_df(df)
-			st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
-		except TypeError:
-			pass
-		except AttributeError:
-			pass
-		except NameError:
-			pass
+				def convert_df(df):
+				# IMPORTANT: Cache the conversion to prevent computation on every rerun
+					return df.to_csv().encode('utf-8')
+				csv = convert_df(df)
+				st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
+			except TypeError:
+				pass
+			except AttributeError:
+				pass
+			except NameError:
+				pass
 
 		### show and allow download of decluttered edited file
 		try:
@@ -143,7 +146,17 @@ if len(files_xlsx) > 2:
 		tab1, tab2, tab3, tab4, tab5 = st.tabs([nametab1, nametab2, nametab3, nametab4,nametab5])
 
 		with tab1:
-			tabdata, tabchart = st.tabs(["Data","Chart"])
+			tabchart, tabdata = st.tabs(["Chart","Data"])
+			with tabchart:
+				try:
+					st.write("""
+						#### Sites by traffic:
+					""")
+					st.bar_chart(df5[:20])
+				except TypeError:
+					pass
+				except AttributeError:
+					pass
 			with tabdata:
 				try:
 					st.write("""
@@ -154,28 +167,9 @@ if len(files_xlsx) > 2:
 					pass
 				except AttributeError:
 					pass
-			with tabchart:
-				try:
-					st.write("""
-						#### Sites by traffic:
-					""")
-					st.bar_chart(df5[:20])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass				
+				
 		with tab2:
-			tabdata, tabchart = st.tabs(["Data","Chart"])
-			with tabdata:
-				try:
-					st.write("""
-						#### Sites by traffic value ($CPC * traffic):
-					""")
-					st.dataframe(df6[:100])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass	
+			tabchart, tabdata = st.tabs(["Chart","Data"])
 			with tabchart:
 				try:
 					st.write("""
@@ -186,18 +180,18 @@ if len(files_xlsx) > 2:
 					pass
 				except AttributeError:
 					pass		
-		with tab3:
-			tabdata, tabchart = st.tabs(["Data","Chart"])
-			with tabdata:				
+			with tabdata:
 				try:
 					st.write("""
-						#### Subfolder/page by traffic:
+						#### Sites by traffic value ($CPC * traffic):
 					""")
-					st.dataframe(df9[:100])
+					st.dataframe(df6[:100])
 				except TypeError:
 					pass
 				except AttributeError:
-					pass
+					pass	
+		with tab3:
+			tabchart, tabdata = st.tabs(["Chart","Data"])
 			with tabchart:				
 				try:
 					st.write("""
@@ -208,18 +202,18 @@ if len(files_xlsx) > 2:
 					pass
 				except AttributeError:
 					pass
-		with tab4:
-			tabdata, tabchart = st.tabs(["Data","Chart"])
 			with tabdata:				
 				try:
 					st.write("""
-						#### Subfolder/page by traffic value ($CPC * traffic):
+						#### Subfolder/page by traffic:
 					""")
-					st.dataframe(df10[:100])
+					st.dataframe(df9[:100])
 				except TypeError:
 					pass
 				except AttributeError:
 					pass
+		with tab4:
+			tabchart, tabdata = st.tabs(["Chart","Data"])
 			with tabchart:				
 				try:
 					st.write("""
@@ -230,4 +224,15 @@ if len(files_xlsx) > 2:
 					pass
 				except AttributeError:
 					pass
+			with tabdata:				
+				try:
+					st.write("""
+						#### Subfolder/page by traffic value ($CPC * traffic):
+					""")
+					st.dataframe(df10[:100])
+				except TypeError:
+					pass
+				except AttributeError:
+					pass
+
 
