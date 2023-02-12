@@ -13,7 +13,9 @@ if 'df10' not in st.session_state:
 	st.session_state.df10 = None
 if "alwaysshow" not in st.session_state:
         st.session_state.alwaysshow = False	
-
+if 'files_xlsx' not in st.session_state:
+	st.session_state.files_xlsx = None
+	
 st.write("""
 	# 🧹 Keyword Declutterer
 	#### Merge and declutter your competitor keyword lists, removing >90% of the brand, irrelevant and nonsense keywords.
@@ -27,6 +29,7 @@ st.write("""
 
 ### Upload your Excel files
 files_xlsx = st.file_uploader("", accept_multiple_files=True, type=['xlsx'])
+st.session_state.files_xlsx = files_xlsx
 
 ### Read files and create single dataframe
 if len(files_xlsx) > 2:		
