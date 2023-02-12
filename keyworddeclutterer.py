@@ -1,7 +1,6 @@
 import pandas as pd
 import re
 import streamlit as st
-import altair.vegalite.v1 as alt
 
 ### The following is used to store the dataframes between reruns
 if 'df' not in st.session_state:
