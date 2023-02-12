@@ -14,10 +14,10 @@ if 'df10' not in st.session_state:
 	
 st.write("""
 	# 🧹 Keyword Declutterer
-	### Merge and declutter your competitor keyword lists, removing >90% of the brand, irrelevant and nonsense keywords.
+	#### Merge and declutter your competitor keyword lists, removing >90% of the brand, irrelevant and nonsense keywords.
 """)
 st.write("""
-	## Simple 3-step setup:
+	##### Simple 3-step setup:
 	1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
 	2. Go to SEMRush and download keyword lists for each of your chosen competitors (they must be the same xlsx format and filename as you downloaded them from SEMRush - if not this will stop the tool from working)
 	3. Upload your files below and click the start button
@@ -42,22 +42,22 @@ if len(files_xlsx) > 2:
 				df = df.append(data)
 			st.session_state.df = df
 
-	if 'df' in st.session_state:
+	try:
 		st.write("""
-			### Merged keyword list (cluttered):
+			#### Merged keyword list (cluttered):
 		""")
 		st.dataframe(df[:100]) 
 		### The following allows downloading to csv file
-		try:
-			def convert_df(df):
-			# IMPORTANT: Cache the conversion to prevent computation on every rerun
-				return df.to_csv().encode('utf-8')
-			csv = convert_df(df)
-			st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
-		except TypeError:
-			pass
-		except AttributeError:
-			pass
+
+		def convert_df(df):
+		# IMPORTANT: Cache the conversion to prevent computation on every rerun
+			return df.to_csv().encode('utf-8')
+		csv = convert_df(df)
+		st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
+	except TypeError:
+		pass
+	except AttributeError:
+		pass
 
 		### filter down keyword list 
 		df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
@@ -71,22 +71,21 @@ if len(files_xlsx) > 2:
 		df4 = df4.drop(['Count'], axis=1)
 		st.session_state.df4 = df4
 
-	if 'df4' in st.session_state:
+	try:
 		st.write("""
-			### Decluttered keyword list:
+			#### Decluttered keyword list:
 		""")
 		st.dataframe(df4[:100]) 
 			### The following allows downloading to csv file
-		try:
-			def convert_df(df4):
-			# IMPORTANT: Cache the conversion to prevent computation on every rerun
-				return df4.to_csv().encode('utf-8')
-			csv = convert_df(df4)
-			st.download_button('Download decluttered file (edited)', csv, file_name="decluttered_file.csv",mime='text/csv')
-		except TypeError:
-			pass
-		except AttributeError:
-			pass	
+		def convert_df(df4):
+		# IMPORTANT: Cache the conversion to prevent computation on every rerun
+			return df4.to_csv().encode('utf-8')
+		csv = convert_df(df4)
+		st.download_button('Download decluttered file (edited)', csv, file_name="decluttered_file.csv",mime='text/csv')
+	except TypeError:
+		pass
+	except AttributeError:
+		pass	
 
 		### pivot the data for a very quick SEMRush data look at estimated clicks by site
 		df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
