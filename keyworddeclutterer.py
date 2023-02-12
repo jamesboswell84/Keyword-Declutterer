@@ -26,8 +26,8 @@ st.write("""
 """)
 st.write("""
 	##### Simple 3-step setup:
-	1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
-	2. Go to SEMRush and download keyword lists for each of your chosen competitors (they must be the same xlsx format and filename as you downloaded them from SEMRush - if not this will stop the tool from working)
+	1. Choose at least 3 of your client's top competitors (per product)
+	2. Go to SEMRush and download keyword lists for your client and each of your chosen competitors (they must be the same xlsx format and filename as you downloaded them from SEMRush - if not this will stop the tool from working)
 	3. Upload your files below and click the start button
 """)
 
