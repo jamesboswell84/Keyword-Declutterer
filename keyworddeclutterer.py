@@ -50,7 +50,7 @@ if len(files_xlsx) > 2:
 				sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
 				data["Site"] = sitename * len(data)
 				df = df.append(data)
-		st.session_state.df = df
+			st.session_state.df = df
 		
 			### filter down keyword list 
 			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
