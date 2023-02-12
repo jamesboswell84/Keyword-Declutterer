@@ -95,28 +95,6 @@ if len(files_xlsx) > 2:
 		df6 = st.session_state.df6			
 		df9 = st.session_state.df9
 		df10 = st.session_state.df10
-		
-		### show and allow download of cluttered unedited file
-		cluttered = st.checkbox('Preview merged file pre-decluttering')
-		if cluttered:
-			try:
-				st.write("""
-					#### Merged keyword list (cluttered):
-				""")
-				st.dataframe(df[:100]) 
-				### The following allows downloading to csv file
-
-				def convert_df(df):
-				# IMPORTANT: Cache the conversion to prevent computation on every rerun
-					return df.to_csv().encode('utf-8')
-				csv = convert_df(df)
-				st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
-			except TypeError:
-				pass
-			except AttributeError:
-				pass
-			except NameError:
-				pass
 
 		### show and allow download of decluttered edited file
 		try:
@@ -136,7 +114,29 @@ if len(files_xlsx) > 2:
 			pass	
 		except NameError:
 			pass
+		
+		### show and allow download of cluttered unedited file (behind checkbox by default)
+		cluttered = st.checkbox('Click here to see the merged file pre-decluttering')
+		if cluttered:
+			try:
+				st.write("""
+					#### Merged keyword list (cluttered):
+				""")
+				st.dataframe(df[:100]) 
+				### The following allows downloading to csv file
 
+				def convert_df(df):
+				# IMPORTANT: Cache the conversion to prevent computation on every rerun
+					return df.to_csv().encode('utf-8')
+				csv = convert_df(df)
+				st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
+			except TypeError:
+				pass
+			except AttributeError:
+				pass
+			except NameError:
+				pass
+		
 		### show data tables and visualisations
 		nametab1 = "Sites by traffic"
 		nametab2 = "Sites by traffic value ($CPC * traffic)"
