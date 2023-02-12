@@ -22,7 +22,7 @@ if "files_xlsx" not in st.session_state:
 	
 st.write("""
 	# 🧹 Keyword Declutterer
-	#### Merge, declutter and download your SEMRush keyword lists, removing >90% of the brand, irrelevant and nonsense keywords.
+	#### Merge, declutter and download your SEMRush keyword lists. Removes >90% of the brand, irrelevant and nonsense keywords.
 """)
 st.write("""
 	##### Simple 3-step setup:
