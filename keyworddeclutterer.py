@@ -42,6 +42,8 @@ if len(files_xlsx) > 2:
 				df = df.append(data)
 			st.session_state.df = df
 
+### show and allow download of cluttered unedited file
+if "df" in st.session_state:
 	try:
 		st.write("""
 			#### Merged keyword list (cluttered):
@@ -61,7 +63,8 @@ if len(files_xlsx) > 2:
 	except NameError:
 		pass
 
-	### filter down keyword list 
+### filter down keyword list 
+if "df" in st.session_state:	
 	df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
 	df2 = df2[df2.Count < 2]
 	df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
@@ -73,6 +76,8 @@ if len(files_xlsx) > 2:
 	df4 = df4.drop(['Count'], axis=1)
 	st.session_state.df4 = df4
 
+### show and allow download of decluttered edited file
+if "df4" in st.session_state:
 	try:
 		st.write("""
 			#### Decluttered keyword list:
@@ -90,13 +95,17 @@ if len(files_xlsx) > 2:
 		pass	
 	except NameError:
 		pass
-	### pivot the data for a very quick SEMRush data look at estimated clicks by site
+
+### pivot the data for a very quick SEMRush data look at estimated clicks by site
+if "df4" in st.session_state:
 	df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
 	st.session_state.df5 = df5
 	df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
 	st.session_state.df6 = df6
 
-	### pivot the data for a very quick SEMRush data look at estimated clicks by sub-folder
+	
+### pivot the data for a very quick SEMRush data look at estimated clicks by sub-folder
+if "df4" in st.session_state:	
 	df7 = df4
 	df7 = df7["URL"].str.split('/', expand=True)
 	df7 = df7.iloc[: , 3:].reset_index()
@@ -111,6 +120,7 @@ if len(files_xlsx) > 2:
 	df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
 	st.session_state.df10 = df10
 
+if "df5" in st.session_state:	
 	nametab1 = "Sites by traffic"
 	nametab2 = "Sites by traffic value ($CPC * traffic)"
 	nametab3 = "Subfolder/page by traffic"
