@@ -90,7 +90,7 @@ if st.button('Start merge & declutter'):
 				Not enough files.
 		""")
 ### if button has been pushed to session state do the following
-if st.session_state.alwaysshow:
+if "alwaysshow" in st.session_state:
 	### show and allow download of cluttered unedited file
 	try:
 		st.write("""
