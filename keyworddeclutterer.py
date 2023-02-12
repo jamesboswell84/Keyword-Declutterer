@@ -31,7 +31,7 @@ files_xlsx = st.file_uploader("", accept_multiple_files=True, type=['xlsx'])
 ### Read files and create single dataframe
 if len(files_xlsx) > 2:		
 	if st.button('Start merge & declutter'):
-	        st.session_state.alwaysshow = True
+		st.session_state.alwaysshow = True
 		df = pd.DataFrame()
 		with st.spinner("Merging files..."):
 			progbar = st.progress(0)
