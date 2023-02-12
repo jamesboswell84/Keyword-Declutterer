@@ -13,14 +13,14 @@ if 'df10' not in st.session_state:
 	st.session_state.df10 = None
 	
 st.write("""
-# 🧹 Keyword Declutterer
-### Merge and declutter your competitor keyword lists, removing >90% of the brand, irrelevant and nonsense keywords.
+	# 🧹 Keyword Declutterer
+	### Merge and declutter your competitor keyword lists, removing >90% of the brand, irrelevant and nonsense keywords.
 """)
 st.write("""
-## Simple 3-step setup:
-1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
-2. Go to SEMRush and download keyword lists for each of your chosen competitors (they must be the same xlsx format and filename as you downloaded them from SEMRush - if not this will stop the tool from working)
-3. Upload your files below and click the start button
+	## Simple 3-step setup:
+	1. Choose at least 3 of your client's top competitors per product (this tool filters off any keywords if less than 3 competitors are on page 1 for it - removing irrelevant and brand in the process)*
+	2. Go to SEMRush and download keyword lists for each of your chosen competitors (they must be the same xlsx format and filename as you downloaded them from SEMRush - if not this will stop the tool from working)
+	3. Upload your files below and click the start button
 """)
 
 ### Upload your Excel files
@@ -42,40 +42,42 @@ if len(files_xlsx) > 2:
 				df = df.append(data)
 			st.session_state.df = df
 
-			try:
-				st.write("""
-		## Merged keyword list (cluttered):
+	if 'df' in st.session_state:
+		st.write("""
+			### Merged keyword list (cluttered):
 		""")
-				st.dataframe(df[:100]) 
-				### The following prints the output and saves it to csv file
-				def convert_df(df):
-				# IMPORTANT: Cache the conversion to prevent computation on every rerun
-					return df.to_csv().encode('utf-8')
-				csv = convert_df(df)
-				st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
-			except TypeError:
-				pass
-			except AttributeError:
-				pass
-
-			### filter down keyword list 
-			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
-			df2 = df2[df2.Count < 2]
-			df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
-			df2 = df2[df2.Traffic > 9]
-			df3 = pd.pivot_table(df2, values="Site", index="Keyword", aggfunc=pd.Series.nunique)
-			df3 = df3[df3.Site > 3].reset_index()
-			df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
-			df4 = df2[df2["Keyword"].isin(df3.Keyword)]
-			df4 = df4.drop(['Count'], axis=1)
-			st.session_state.df4 = df4
-
+		st.dataframe(df[:100]) 
+		### The following allows downloading to csv file
 		try:
-			st.write("""
-				## Decluttered keyword list:
-			""")
-			st.dataframe(df4[:100]) 
-			### The following prints the output and saves it to csv file
+			def convert_df(df):
+			# IMPORTANT: Cache the conversion to prevent computation on every rerun
+				return df.to_csv().encode('utf-8')
+			csv = convert_df(df)
+			st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
+		except TypeError:
+			#pass
+		except AttributeError:
+			#pass
+
+		### filter down keyword list 
+		df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
+		df2 = df2[df2.Count < 2]
+		df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
+		df2 = df2[df2.Traffic > 9]
+		df3 = pd.pivot_table(df2, values="Site", index="Keyword", aggfunc=pd.Series.nunique)
+		df3 = df3[df3.Site > 3].reset_index()
+		df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
+		df4 = df2[df2["Keyword"].isin(df3.Keyword)]
+		df4 = df4.drop(['Count'], axis=1)
+		st.session_state.df4 = df4
+
+	if 'df4' in st.session_state:
+		st.write("""
+			### Decluttered keyword list:
+		""")
+		st.dataframe(df4[:100]) 
+			### The following allows downloading to csv file
+		try:
 			def convert_df(df4):
 			# IMPORTANT: Cache the conversion to prevent computation on every rerun
 				return df4.to_csv().encode('utf-8')
@@ -117,31 +119,31 @@ if len(files_xlsx) > 2:
 		with tab1:
 			if 'df5' in st.session_state:
 				st.write("""
-					## Sites by traffic:
+					#### Sites by traffic:
 				""")
 				st.dataframe(df5[:100])		
 		with tab2:
 			if 'df6' in st.session_state:
 				st.write("""
-					## Sites by traffic value ($CPC * traffic):
+					#### Sites by traffic value ($CPC * traffic):
 				""")
 			st.dataframe(df6[:100])
 		with tab3:
 			if 'df9' in st.session_state:
 				st.write("""
-					## Subfolder/page by traffic:
+					#### Subfolder/page by traffic:
 				""")
 			st.dataframe(df9[:100])
 		with tab4:
 			if 'df10' in st.session_state:
 				st.write("""
-					## Subfolder/page by traffic value ($CPC * traffic):
+					#### Subfolder/page by traffic value ($CPC * traffic):
 				""")
 			st.dataframe(df10[:100])
 		with tab5:
 			if 'df5' in st.session_state:
 				st.write("""
-					## Subfolder/page by traffic value ($CPC * traffic):
+					#### Subfolder/page by traffic value ($CPC * traffic):
 				""")				
 		#except TypeError:
 		#	pass
