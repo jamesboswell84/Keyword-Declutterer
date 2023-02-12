@@ -41,7 +41,7 @@ if len(files_xlsx) > 2:
 				data["Site"] = sitename * len(data)
 				df = df.append(data)
 			st.session_state.df = df
-
+try:
 	### show and allow download of cluttered unedited file
 	if "df" in st.session_state:
 		try:
@@ -177,3 +177,9 @@ if len(files_xlsx) > 2:
 				pass
 			except AttributeError:
 				pass
+except TypeError:
+	pass
+except AttributeError:
+	pass
+except NameError:
+	pass
