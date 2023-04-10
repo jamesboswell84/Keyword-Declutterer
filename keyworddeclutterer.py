@@ -26,7 +26,7 @@ st.write("""
 	#### Merge, declutter and download your SEMRush keyword lists. Removes >90% of the brand, irrelevant and nonsense keywords.
 """)
 st.write("""
-	[Instructions here](https://raw.githubusercontent.com/jamesboswell84/Keyword-Declutterer/main/README.md)
+	[Instructions here](https://github.com/jamesboswell84/Keyword-Declutterer/blob/main/README.md)
 """)
 
 ### Upload your Excel files
