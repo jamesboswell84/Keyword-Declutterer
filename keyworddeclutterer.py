@@ -26,10 +26,7 @@ st.write("""
 	#### Merge, declutter and download your SEMRush keyword lists. Removes >90% of the brand, irrelevant and nonsense keywords.
 """)
 st.write("""
-	##### Simple 3-step setup:
-	1. Choose at least 3 of your client's top competitors (per product)
-	2. Go to SEMRush and download keyword lists for your client and each of your chosen competitors (they must be the same xlsx format and filename as you downloaded them from SEMRush - if not this will stop the tool from working)
-	3. Upload your files below and click the start button
+	[Instructions here](https://raw.githubusercontent.com/jamesboswell84/Keyword-Declutterer/main/README.md)
 """)
 
 ### Upload your Excel files
