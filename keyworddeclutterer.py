@@ -109,6 +109,7 @@ if len(files_xlsx) > 2:
 		df10 = st.session_state.df10
 
 		### show and allow download of decluttered edited file
+		st.divider
 		try:
 			st.write("""
 				#### Decluttered keyword list:
@@ -126,7 +127,7 @@ if len(files_xlsx) > 2:
 			pass	
 		except NameError:
 			pass
-		
+		st.divider
 		### show and allow download of cluttered unedited file (behind checkbox by default)
 		cluttered = st.checkbox('Click here to see the merged file pre-decluttering')
 		if cluttered:
@@ -148,7 +149,7 @@ if len(files_xlsx) > 2:
 				pass
 			except NameError:
 				pass
-		
+		st.divider
 		### show data tables and visualisations
 		nametab1 = "Sites by traffic"
 		nametab2 = "Sites by traffic value ($CPC * traffic)"
