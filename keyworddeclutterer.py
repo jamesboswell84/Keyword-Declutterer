@@ -37,7 +37,7 @@ st.session_state.files_xlsx = files_xlsx
 
 sensitivity = st.radio(
 	"Change the preferred sensitivity of your keyword filtering. Only keep keywords where...",
-	("Only keep keywords where 2 or more sites get traffic","3 or more sites get traffic","4 or more sites get traffic"))
+	("2 or more sites get traffic","3 or more sites get traffic","4 or more sites get traffic"))
 
 if sensitivity =="2 or more sites get traffic":
 	sens = 2
