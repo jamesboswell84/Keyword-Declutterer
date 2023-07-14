@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 import streamlit as st
+from enchant.checker import SpellChecker
 
 ### The following is used to store the dataframes between reruns
 if 'df' not in st.session_state:
@@ -63,9 +64,10 @@ if len(files_xlsx) > 2:
 				sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
 				data["Site"] = sitename * len(data)
 				df = df.append(data)
-
+###
+		###
 		### filter down keyword list 
-		with st.spinner("Decluttering files..."):
+		with st.spinner("Filtering keywords..."):
 			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
 			df2 = df2[df2.Count < 2]
 			df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
@@ -75,6 +77,20 @@ if len(files_xlsx) > 2:
 			df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
 			df4 = df2[df2["Keyword"].isin(df3.Keyword)]
 			df4 = df4.drop(['Count'], axis=1)	
+
+			### removing typos
+			chkr = SpellChecker("en_GB")
+			kwds = df['Keyword'].drop_duplicates().to_list()
+			chkr.set_text(kwds)
+			with st.spinner("Removing typos..."):
+				progbar = st.progress(0)
+				counter = 0
+				for k in kwds:
+					progbar.progress(counter/len(files_xlsx))
+					counter = counter + 1
+					d.check(k)
+					df = df.append(data)
+			df1 = df['Keyword'].drop_duplicates()
 
 			### pivot the data for a very quick SEMRush data look at estimated clicks by site
 			df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)		
@@ -108,7 +124,12 @@ if len(files_xlsx) > 2:
 		df9 = st.session_state.df9
 		df10 = st.session_state.df10
 
-		### show and allow download of decluttered edited file
+#######
+		#######
+		#######
+		#######
+		#######
+		### show and allow download of clean keyword list
 		st.divider()
 		try:
 			st.write("""
@@ -127,13 +148,34 @@ if len(files_xlsx) > 2:
 			pass	
 		except NameError:
 			pass
+		
+		### show and allow download of decluttered edited file
 		st.divider()
+		try:
+			st.write("""
+				#### All data:
+			""")
+			st.dataframe(df4[:100]) 
+				### The following allows downloading to csv file
+			def convert_df(df4):
+			# IMPORTANT: Cache the conversion to prevent computation on every rerun
+				return df4.to_csv().encode('utf-8')
+			csv = convert_df(df4)
+			st.download_button('Download all data (edited)', csv, file_name="all_keyword_data.csv",mime='text/csv')
+		except TypeError:
+			pass
+		except AttributeError:
+			pass	
+		except NameError:
+			pass
+		st.divider()
+		
 		### show and allow download of cluttered unedited file (behind checkbox by default)
-		cluttered = st.checkbox('Click here to see the merged file pre-decluttering')
+		cluttered = st.checkbox('Click here to see the data pre-decluttering')
 		if cluttered:
 			try:
 				st.write("""
-					#### Merged keyword list (cluttered):
+					#### Raw keyword data (unedited):
 				""")
 				st.dataframe(df[:100]) 
 				### The following allows downloading to csv file
@@ -142,7 +184,7 @@ if len(files_xlsx) > 2:
 				# IMPORTANT: Cache the conversion to prevent computation on every rerun
 					return df.to_csv().encode('utf-8')
 				csv = convert_df(df)
-				st.download_button('Download merged file (unedited)', csv, file_name="merged_file.csv",mime='text/csv')
+				st.download_button('Download raw data (unedited)', csv, file_name="raw_keyword_data.csv",mime='text/csv')
 			except TypeError:
 				pass
 			except AttributeError:
