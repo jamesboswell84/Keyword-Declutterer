@@ -33,6 +33,19 @@ st.write("""
 files_xlsx = st.file_uploader("", accept_multiple_files=True, type=['xlsx'])
 st.session_state.files_xlsx = files_xlsx
 
+### Configure sensitivity
+
+sensitivity = st.radio(
+	"Change the preferred sensitivity of your keyword filtering. Only keep keywords where...",
+	("Only keep keywords where 2 or more sites get traffic","3 or more sites get traffic","4 or more sites get traffic"))
+
+if sensitivity =="2 or more sites get traffic":
+	sens = 2
+if sensitivity =="3 or more sites get traffic":
+	sens = 3
+if sensitivity =="4 or more sites get traffic":
+	sens = 4
+	
 ### Read files and create single dataframe
 		
 if len(files_xlsx) > 2:
@@ -57,7 +70,7 @@ if len(files_xlsx) > 2:
 			df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
 			df2 = df2[df2.Traffic > 9]
 			df3 = pd.pivot_table(df2, values="Site", index="Keyword", aggfunc=pd.Series.nunique)
-			df3 = df3[df3.Site > 3].reset_index()
+			df3 = df3[df3.Site > sens].reset_index()
 			df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
 			df4 = df2[df2["Keyword"].isin(df3.Keyword)]
 			df4 = df4.drop(['Count'], axis=1)	
