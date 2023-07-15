@@ -1,7 +1,6 @@
 import pandas as pd
 import re
 import streamlit as st
-from enchant.checker import SpellChecker
 
 ### The following is used to store the dataframes between reruns
 if 'df' not in st.session_state:
@@ -64,8 +63,7 @@ if len(files_xlsx) > 2:
 				sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
 				data["Site"] = sitename * len(data)
 				df = df.append(data)
-###
-		###
+
 		### filter down keyword list 
 		with st.spinner("Filtering keywords..."):
 			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
@@ -77,21 +75,7 @@ if len(files_xlsx) > 2:
 			df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
 			df4 = df2[df2["Keyword"].isin(df3.Keyword)]
 			df4 = df4.drop(['Count'], axis=1)	
-
-			### removing typos
-			chkr = SpellChecker("en_GB")
-			kwds = df['Keyword'].drop_duplicates().to_list()
-			chkr.set_text(kwds)
-			with st.spinner("Removing typos..."):
-				progbar = st.progress(0)
-				counter = 0
-				for k in kwds:
-					progbar.progress(counter/len(files_xlsx))
-					counter = counter + 1
-					d.check(k)
-					df = df.append(data)
-			df1 = df['Keyword'].drop_duplicates()
-
+			
 			### pivot the data for a very quick SEMRush data look at estimated clicks by site
 			df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)		
 			df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)		
