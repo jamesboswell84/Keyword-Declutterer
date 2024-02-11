@@ -54,7 +54,6 @@ try:
 	st.write("""
 		#### All data:
 	""")
-	st.dataframe(df4[:100]) 
 		### The following allows downloading to csv file
 	def convert_df(df):
 	# IMPORTANT: Cache the conversion to prevent computation on every rerun
