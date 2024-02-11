@@ -45,16 +45,17 @@ if len(files_xlsx) > 2:
 				progbar.progress(counter/len(files_xlsx))
 				counter = counter + 1
 				data = pd.read_excel(files_xlsx[f], 'Aggregated_Data_for_Time_Period')
-				st.write(data)
 				sitename = re.findall(r"TopSitesExtended\-(.*)\-\(826\).*",files_xlsx[f].name)
 				data["Industry"] = sitename * len(data)
 				df = pd.concat([df, pd.DataFrame(data)], ignore_index=True)
+
 
 try:
 	st.write("""
 		#### All data:
 	""")
 		### The following allows downloading to csv file
+	st.dataframe(df)
 	def convert_df(df):
 	# IMPORTANT: Cache the conversion to prevent computation on every rerun
 		return df.to_csv().encode('utf-8')
