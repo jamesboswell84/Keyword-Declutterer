@@ -48,7 +48,8 @@ if len(files_xlsx) > 2:
 				st.write(data)
 				sitename = re.findall(r"TopSitesExtended\-(.*)\-\(826\).*",files_xlsx[f].name)
 				data["Industry"] = sitename * len(data)
-				df = df.append(data)
+				df = pd.concat([df, pd.DataFrame(data)], ignore_index=True)
+
 try:
 	st.write("""
 		#### All data:
