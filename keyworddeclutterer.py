@@ -60,218 +60,236 @@ if len(files_xlsx) > 2:
 				progbar.progress(counter/len(files_xlsx))
 				counter = counter + 1
 				data = pd.read_excel(files_xlsx[f], 'Aggregated_Data_for_Time_Period')
-				sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
-				data["Site"] = sitename * len(data)
+				sitename = re.findall(r"TopSitesExtended\-(.*)\-\(826\)",files_xlsx[f].name)
+				data["Industry"] = sitename * len(data)
 				df = df.append(data)
 
-		### filter down keyword list 
-		with st.spinner("Filtering keywords..."):
-			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
-			df2 = df2[df2.Count < 2]
-			df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
-			df2 = df2[df2.Traffic > 9]
-			df3 = pd.pivot_table(df2, values="Site", index="Keyword", aggfunc=pd.Series.nunique)
-			df3 = df3[df3.Site > sens].reset_index()
-			df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
-			df4 = df2[df2["Keyword"].isin(df3.Keyword)]
-			df4 = df4.drop(['Count'], axis=1)	
+ 		try:
+ 			st.write("""
+ 				#### All data:
+ 			""")
+ 			st.dataframe(df4[:100]) 
+ 				### The following allows downloading to csv file
+ 			def convert_df(df):
+ 			# IMPORTANT: Cache the conversion to prevent computation on every rerun
+ 				return df.to_csv().encode('utf-8')
+ 			csv = convert_df(df)
+ 			st.download_button('Download merged file', csv, file_name="merged_xlsx_files.csv",mime='text/csv')
+ 		except TypeError:
+ 			pass
+ 		except AttributeError:
+ 			pass	
+ 		except NameError:
+ 			pass
+
+# 		### filter down keyword list 
+# 		with st.spinner("Filtering keywords..."):
+# 			df2 = df.groupby(['Keyword','Site']).size().reset_index(name='Count')
+# 			df2 = df2[df2.Count < 2]
+# 			df2 = df2.merge(df,how="inner",on=["Keyword","Site"])
+# 			df2 = df2[df2.Traffic > 9]
+# 			df3 = pd.pivot_table(df2, values="Site", index="Keyword", aggfunc=pd.Series.nunique)
+# 			df3 = df3[df3.Site > sens].reset_index()
+# 			df3 = df3.rename({"Keyword": "Keyword", "Site": "Site Count"}, axis='columns')
+# 			df4 = df2[df2["Keyword"].isin(df3.Keyword)]
+# 			df4 = df4.drop(['Count'], axis=1)	
 			
-			### pivot the data for a very quick SEMRush data look at estimated clicks by site
-			df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)		
-			df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)		
+# 			### pivot the data for a very quick SEMRush data look at estimated clicks by site
+# 			df5 = pd.pivot_table(df4, values="Traffic", index="Site", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)		
+# 			df6 = pd.pivot_table(df4, values="Traffic Cost", index="Site", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)		
 
-			### pivot the data for a very quick SEMRush data look at estimated clicks by sub-folder
-			df7 = df4
-			df7 = df7["URL"].str.split('/', expand=True)
-			df7 = df7.iloc[: , 3:].reset_index()
-			df7 = df7.set_index("index").stack().reset_index(level=1, drop=True).to_frame("Sub").reset_index()
-			df8 = df4.reset_index()
-			df7 = df7.merge(df8,how="inner",on=["index"])
-			df7["Sub"] = df7["Sub"].replace(r'^s*$', float('NaN'), regex = True)
-			df7.dropna(inplace = True)
-			df7["Subfolder/Page"] = df7["Sub"]
-			df9 = pd.pivot_table(df7, values="Traffic", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
-			df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
-			st.session_state.df = df
-			st.session_state.df4 = df4
-			st.session_state.df5 = df5			
-			st.session_state.df6 = df6			
-			st.session_state.df9 = df9
-			st.session_state.df10 = df10		
+# 			### pivot the data for a very quick SEMRush data look at estimated clicks by sub-folder
+# 			df7 = df4
+# 			df7 = df7["URL"].str.split('/', expand=True)
+# 			df7 = df7.iloc[: , 3:].reset_index()
+# 			df7 = df7.set_index("index").stack().reset_index(level=1, drop=True).to_frame("Sub").reset_index()
+# 			df8 = df4.reset_index()
+# 			df7 = df7.merge(df8,how="inner",on=["index"])
+# 			df7["Sub"] = df7["Sub"].replace(r'^s*$', float('NaN'), regex = True)
+# 			df7.dropna(inplace = True)
+# 			df7["Subfolder/Page"] = df7["Sub"]
+# 			df9 = pd.pivot_table(df7, values="Traffic", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic'], ascending=False)
+# 			df10 = pd.pivot_table(df7, values="Traffic Cost", index="Subfolder/Page", aggfunc=sum).sort_values(by=['Traffic Cost'], ascending=False)
+# 			st.session_state.df = df
+# 			st.session_state.df4 = df4
+# 			st.session_state.df5 = df5			
+# 			st.session_state.df6 = df6			
+# 			st.session_state.df9 = df9
+# 			st.session_state.df10 = df10		
 
-	### if button has been pushed to session state do the following
-	if st.session_state.alwaysshow:
-		df = st.session_state.df
-		df4 = st.session_state.df4
-		df5 = st.session_state.df5	
-		df6 = st.session_state.df6			
-		df9 = st.session_state.df9
-		df10 = st.session_state.df10
+# 	### if button has been pushed to session state do the following
+# 	if st.session_state.alwaysshow:
+# 		df = st.session_state.df
+# 		df4 = st.session_state.df4
+# 		df5 = st.session_state.df5	
+# 		df6 = st.session_state.df6			
+# 		df9 = st.session_state.df9
+# 		df10 = st.session_state.df10
 
-#######
-		#######
-		#######
-		#######
-		#######
-		### show and allow download of clean keyword list
-		st.divider()
-		try:
-			st.write("""
-				#### Decluttered keyword list:
-			""")
-			st.dataframe(df4[:100]) 
-				### The following allows downloading to csv file
-			def convert_df(df4):
-			# IMPORTANT: Cache the conversion to prevent computation on every rerun
-				return df4.to_csv().encode('utf-8')
-			csv = convert_df(df4)
-			st.download_button('Download decluttered file (edited)', csv, file_name="decluttered_file.csv",mime='text/csv')
-		except TypeError:
-			pass
-		except AttributeError:
-			pass	
-		except NameError:
-			pass
+# #######
+# 		#######
+# 		#######
+# 		#######
+# 		#######
+# 		### show and allow download of clean keyword list
+# 		st.divider()
+# 		try:
+# 			st.write("""
+# 				#### Decluttered keyword list:
+# 			""")
+# 			st.dataframe(df4[:100]) 
+# 				### The following allows downloading to csv file
+# 			def convert_df(df4):
+# 			# IMPORTANT: Cache the conversion to prevent computation on every rerun
+# 				return df4.to_csv().encode('utf-8')
+# 			csv = convert_df(df4)
+# 			st.download_button('Download decluttered file (edited)', csv, file_name="decluttered_file.csv",mime='text/csv')
+# 		except TypeError:
+# 			pass
+# 		except AttributeError:
+# 			pass	
+# 		except NameError:
+# 			pass
 		
-		### show and allow download of decluttered edited file
-		st.divider()
-		try:
-			st.write("""
-				#### All data:
-			""")
-			st.dataframe(df4[:100]) 
-				### The following allows downloading to csv file
-			def convert_df(df4):
-			# IMPORTANT: Cache the conversion to prevent computation on every rerun
-				return df4.to_csv().encode('utf-8')
-			csv = convert_df(df4)
-			st.download_button('Download all data (edited)', csv, file_name="all_keyword_data.csv",mime='text/csv')
-		except TypeError:
-			pass
-		except AttributeError:
-			pass	
-		except NameError:
-			pass
-		st.divider()
+# 		### show and allow download of decluttered edited file
+# 		st.divider()
+# 		try:
+# 			st.write("""
+# 				#### All data:
+# 			""")
+# 			st.dataframe(df4[:100]) 
+# 				### The following allows downloading to csv file
+# 			def convert_df(df4):
+# 			# IMPORTANT: Cache the conversion to prevent computation on every rerun
+# 				return df4.to_csv().encode('utf-8')
+# 			csv = convert_df(df4)
+# 			st.download_button('Download all data (edited)', csv, file_name="all_keyword_data.csv",mime='text/csv')
+# 		except TypeError:
+# 			pass
+# 		except AttributeError:
+# 			pass	
+# 		except NameError:
+# 			pass
+# 		st.divider()
 		
-		### show and allow download of cluttered unedited file (behind checkbox by default)
-		cluttered = st.checkbox('Click here to see the data pre-decluttering')
-		if cluttered:
-			try:
-				st.write("""
-					#### Raw keyword data (unedited):
-				""")
-				st.dataframe(df[:100]) 
-				### The following allows downloading to csv file
+# 		### show and allow download of cluttered unedited file (behind checkbox by default)
+# 		cluttered = st.checkbox('Click here to see the data pre-decluttering')
+# 		if cluttered:
+# 			try:
+# 				st.write("""
+# 					#### Raw keyword data (unedited):
+# 				""")
+# 				st.dataframe(df[:100]) 
+# 				### The following allows downloading to csv file
 
-				def convert_df(df):
-				# IMPORTANT: Cache the conversion to prevent computation on every rerun
-					return df.to_csv().encode('utf-8')
-				csv = convert_df(df)
-				st.download_button('Download raw data (unedited)', csv, file_name="raw_keyword_data.csv",mime='text/csv')
-			except TypeError:
-				pass
-			except AttributeError:
-				pass
-			except NameError:
-				pass
-		st.divider()
-		### show data tables and visualisations
-		nametab1 = "Sites by traffic"
-		nametab2 = "Sites by traffic value ($CPC * traffic)"
-		nametab3 = "Subfolder/page by traffic"
-		nametab4 = "Subfolder/page by traffic value ($CPC * traffic)"
-		nametab5 = "$CPC versus difficulty"
-		tab1, tab2, tab3, tab4, tab5 = st.tabs([nametab1, nametab2, nametab3, nametab4,nametab5])
+# 				def convert_df(df):
+# 				# IMPORTANT: Cache the conversion to prevent computation on every rerun
+# 					return df.to_csv().encode('utf-8')
+# 				csv = convert_df(df)
+# 				st.download_button('Download raw data (unedited)', csv, file_name="raw_keyword_data.csv",mime='text/csv')
+# 			except TypeError:
+# 				pass
+# 			except AttributeError:
+# 				pass
+# 			except NameError:
+# 				pass
+# 		st.divider()
+# 		### show data tables and visualisations
+# 		nametab1 = "Sites by traffic"
+# 		nametab2 = "Sites by traffic value ($CPC * traffic)"
+# 		nametab3 = "Subfolder/page by traffic"
+# 		nametab4 = "Subfolder/page by traffic value ($CPC * traffic)"
+# 		nametab5 = "$CPC versus difficulty"
+# 		tab1, tab2, tab3, tab4, tab5 = st.tabs([nametab1, nametab2, nametab3, nametab4,nametab5])
 
-		with tab1:
-			tabchart, tabdata = st.tabs(["Chart","Data"])
-			with tabchart:
-				try:
-					st.write("""
-						#### Sites by traffic:
-					""")
-					st.bar_chart(df5[:20])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass
-			with tabdata:
-				try:
-					st.write("""
-						#### Sites by traffic:
-					""")
-					st.dataframe(df5[:100])		
-				except TypeError:
-					pass
-				except AttributeError:
-					pass
+# 		with tab1:
+# 			tabchart, tabdata = st.tabs(["Chart","Data"])
+# 			with tabchart:
+# 				try:
+# 					st.write("""
+# 						#### Sites by traffic:
+# 					""")
+# 					st.bar_chart(df5[:20])
+# 				except TypeError:
+# 					pass
+# 				except AttributeError:
+# 					pass
+# 			with tabdata:
+# 				try:
+# 					st.write("""
+# 						#### Sites by traffic:
+# 					""")
+# 					st.dataframe(df5[:100])		
+# 				except TypeError:
+# 					pass
+# 				except AttributeError:
+# 					pass
 				
-		with tab2:
-			tabchart, tabdata = st.tabs(["Chart","Data"])
-			with tabchart:
-				try:
-					st.write("""
-						#### Sites by traffic value ($CPC * traffic):
-					""")
-					st.bar_chart(df6[:20])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass		
-			with tabdata:
-				try:
-					st.write("""
-						#### Sites by traffic value ($CPC * traffic):
-					""")
-					st.dataframe(df6[:100])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass	
-		with tab3:
-			tabchart, tabdata = st.tabs(["Chart","Data"])
-			with tabchart:				
-				try:
-					st.write("""
-						#### Subfolder/page by traffic:
-					""")
-					st.bar_chart(df9[:30])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass
-			with tabdata:				
-				try:
-					st.write("""
-						#### Subfolder/page by traffic:
-					""")
-					st.dataframe(df9[:100])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass
-		with tab4:
-			tabchart, tabdata = st.tabs(["Chart","Data"])
-			with tabchart:				
-				try:
-					st.write("""
-						#### Subfolder/page by traffic value ($CPC * traffic):
-					""")
-					st.bar_chart(df10[:30])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass
-			with tabdata:				
-				try:
-					st.write("""
-						#### Subfolder/page by traffic value ($CPC * traffic):
-					""")
-					st.dataframe(df10[:100])
-				except TypeError:
-					pass
-				except AttributeError:
-					pass
+# 		with tab2:
+# 			tabchart, tabdata = st.tabs(["Chart","Data"])
+# 			with tabchart:
+# 				try:
+# 					st.write("""
+# 						#### Sites by traffic value ($CPC * traffic):
+# 					""")
+# 					st.bar_chart(df6[:20])
+# 				except TypeError:
+# 					pass
+# 				except AttributeError:
+# 					pass		
+# 			with tabdata:
+# 				try:
+# 					st.write("""
+# 						#### Sites by traffic value ($CPC * traffic):
+# 					""")
+# 					st.dataframe(df6[:100])
+# 				except TypeError:
+# 					pass
+# 				except AttributeError:
+# 					pass	
+# 		with tab3:
+# 			tabchart, tabdata = st.tabs(["Chart","Data"])
+# 			with tabchart:				
+# 				try:
+# 					st.write("""
+# 						#### Subfolder/page by traffic:
+# 					""")
+# 					st.bar_chart(df9[:30])
+# 				except TypeError:
+# 					pass
+# 				except AttributeError:
+# 					pass
+# 			with tabdata:				
+# 				try:
+# 					st.write("""
+# 						#### Subfolder/page by traffic:
+# 					""")
+# 					st.dataframe(df9[:100])
+# 				except TypeError:
+# 					pass
+# 				except AttributeError:
+# 					pass
+# 		with tab4:
+# 			tabchart, tabdata = st.tabs(["Chart","Data"])
+# 			with tabchart:				
+# 				try:
+# 					st.write("""
+# 						#### Subfolder/page by traffic value ($CPC * traffic):
+# 					""")
+# 					st.bar_chart(df10[:30])
+# 				except TypeError:
+# 					pass
+# 				except AttributeError:
+# 					pass
+# 			with tabdata:				
+# 				try:
+# 					st.write("""
+# 						#### Subfolder/page by traffic value ($CPC * traffic):
+# 					""")
+# 					st.dataframe(df10[:100])
+# 				except TypeError:
+# 					pass
+# 				except AttributeError:
+# 					pass
 
 
