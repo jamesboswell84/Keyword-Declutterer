@@ -33,22 +33,7 @@ st.write("""
 files_xlsx = st.file_uploader("", accept_multiple_files=True, type=['xlsx'])
 st.session_state.files_xlsx = files_xlsx
 
-### Configure sensitivity
 
-sensitivity = st.radio(
-	"Change the preferred sensitivity of your keyword filtering. Only keep keywords where...",
-	("2 or more sites get traffic","3 or more sites get traffic","4 or more sites get traffic"),
-	index=1)
-
-if sensitivity =="2 or more sites get traffic":
-	sens = 2
-if sensitivity =="3 or more sites get traffic":
-	sens = 3
-if sensitivity =="4 or more sites get traffic":
-	sens = 4
-	
-### Read files and create single dataframe
-		
 if len(files_xlsx) > 2:
 	if st.button('Start merge & declutter'):
 		st.session_state.alwaysshow = True
@@ -60,10 +45,10 @@ if len(files_xlsx) > 2:
 				progbar.progress(counter/len(files_xlsx))
 				counter = counter + 1
 				data = pd.read_excel(files_xlsx[f], 'Aggregated_Data_for_Time_Period')
-				sitename = re.findall(r"TopSitesExtended\-(.*)\-\(826\)",files_xlsx[f].name)
+				st.write(data)
+				sitename = re.findall(r"TopSitesExtended\-(.*)\-\(826\).*",files_xlsx[f].name)
 				data["Industry"] = sitename * len(data)
 				df = df.append(data)
-
 try:
 	st.write("""
 		#### All data:
@@ -81,6 +66,39 @@ except AttributeError:
 	pass	
 except NameError:
 	pass
+
+
+
+### Configure sensitivity
+
+# sensitivity = st.radio(
+# 	"Change the preferred sensitivity of your keyword filtering. Only keep keywords where...",
+# 	("2 or more sites get traffic","3 or more sites get traffic","4 or more sites get traffic"),
+# 	index=1)
+
+# if sensitivity =="2 or more sites get traffic":
+# 	sens = 2
+# if sensitivity =="3 or more sites get traffic":
+# 	sens = 3
+# if sensitivity =="4 or more sites get traffic":
+# 	sens = 4
+	
+### Read files and create single dataframe
+		
+# if len(files_xlsx) > 2:
+# 	if st.button('Start merge & declutter'):
+# 		st.session_state.alwaysshow = True
+# 		df = pd.DataFrame()
+# 		with st.spinner("Merging files..."):
+# 			progbar = st.progress(0)
+# 			counter = 0
+# 			for f in range(len(files_xlsx)):
+# 				progbar.progress(counter/len(files_xlsx))
+# 				counter = counter + 1
+# 				data = pd.read_excel(files_xlsx[f], 'Aggregated_Data_for_Time_Period')
+# 				sitename = re.findall(r"TopSitesExtended\-(.*)\-\(826\)",files_xlsx[f].name)
+# 				data["Industry"] = sitename * len(data)
+# 				df = df.append(data)
 
 # 		### filter down keyword list 
 # 		with st.spinner("Filtering keywords..."):
