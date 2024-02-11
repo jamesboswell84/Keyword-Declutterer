@@ -59,7 +59,7 @@ if len(files_xlsx) > 2:
 			for f in range(len(files_xlsx)):
 				progbar.progress(counter/len(files_xlsx))
 				counter = counter + 1
-				data = pd.read_excel(files_xlsx[f], 'Sheet 1')
+				data = pd.read_excel(files_xlsx[f], 'Aggregated_Data_for_Time_Period')
 				sitename = re.findall(r"(.*)\-organic\.Positions",files_xlsx[f].name)
 				data["Site"] = sitename * len(data)
 				df = df.append(data)
