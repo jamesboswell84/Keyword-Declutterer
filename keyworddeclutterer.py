@@ -64,23 +64,23 @@ if len(files_xlsx) > 2:
 				data["Industry"] = sitename * len(data)
 				df = df.append(data)
 
- 		try:
- 			st.write("""
- 				#### All data:
- 			""")
- 			st.dataframe(df4[:100]) 
- 				### The following allows downloading to csv file
- 			def convert_df(df):
- 			# IMPORTANT: Cache the conversion to prevent computation on every rerun
- 				return df.to_csv().encode('utf-8')
- 			csv = convert_df(df)
- 			st.download_button('Download merged file', csv, file_name="merged_xlsx_files.csv",mime='text/csv')
- 		except TypeError:
- 			pass
- 		except AttributeError:
- 			pass	
- 		except NameError:
- 			pass
+try:
+	st.write("""
+		#### All data:
+	""")
+	st.dataframe(df4[:100]) 
+		### The following allows downloading to csv file
+	def convert_df(df):
+	# IMPORTANT: Cache the conversion to prevent computation on every rerun
+		return df.to_csv().encode('utf-8')
+	csv = convert_df(df)
+	st.download_button('Download merged file', csv, file_name="merged_xlsx_files.csv",mime='text/csv')
+except TypeError:
+	pass
+except AttributeError:
+	pass	
+except NameError:
+	pass
 
 # 		### filter down keyword list 
 # 		with st.spinner("Filtering keywords..."):
